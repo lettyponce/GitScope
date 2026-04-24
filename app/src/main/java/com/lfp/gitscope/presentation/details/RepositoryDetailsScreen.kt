@@ -30,7 +30,7 @@ import com.lfp.gitscope.presentation.theme.GitScopeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RepoDetailsScreen(
+fun RepositoryDetailsScreen(
     repository: Repository
 ) {
     Scaffold(
@@ -107,7 +107,7 @@ fun RepoDetailsScreen(
 @Composable
 private fun RepositoryDetailsScreenPreview() {
     GitScopeTheme(dynamicColor = false) {
-        RepoDetailsScreen(repository = MockRepositories.repositories.first())
+        RepositoryDetailsScreen(repository = MockRepositories.repositories.first())
     }
 }
 
@@ -119,7 +119,7 @@ private fun RepositoryDetailsScreenPreview() {
 @Composable
 private fun RepositoryDetailsScreenPreviewDark() {
     GitScopeTheme(dynamicColor = false) {
-        RepoDetailsScreen(repository = MockRepositories.repositories[1])
+        RepositoryDetailsScreen(repository = MockRepositories.repositories[1])
     }
 }
 
@@ -127,7 +127,7 @@ private fun RepositoryDetailsScreenPreviewDark() {
 @Composable
 private fun RepositoryDetailsScreenPreviewNoDescription() {
     GitScopeTheme(dynamicColor = false) {
-        RepoDetailsScreen(
+        RepositoryDetailsScreen(
             repository = MockRepositories.repositories[2].copy(description = null)
         )
     }

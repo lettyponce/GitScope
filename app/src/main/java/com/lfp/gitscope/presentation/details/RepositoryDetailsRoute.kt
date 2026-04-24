@@ -4,19 +4,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun RepositoryDetailsRoute(
-    viewModel: RepositoryDetailsViewModel = viewModel()
+    viewModel: RepositoryDetailsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     val repository = uiState.repository
 
     if (repository != null) {
-        RepoDetailsScreen(repository = repository)
+        RepositoryDetailsScreen(repository = repository)
     } else {
-        Text(text = "Repository not found")
+        Text(text = uiState.errorMessage ?: "Loading repository...")
     }
 }

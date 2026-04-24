@@ -89,6 +89,20 @@ This project was built using an incremental approach, focusing on delivering a w
 - Assisted in structuring DTOs and mappers for the GitHub API response
 - Helped define repository abstraction and Hilt modules
 
+---
+
+### Step 7 — Connect ViewModels to Data Source
+
+- Updated `RepositoriesViewModel` to load repositories from the real GitHub API
+- Updated `RepositoryDetailsViewModel` to load repository details from the API
+- Added `@HiltViewModel` to ViewModels
+- Injected dependencies using constructor injection with `@Inject`
+- Replaced `viewModel()` with `hiltViewModel()` in Route composables
+- Updated navigation arguments from `repoId` to `owner/repo`, matching the GitHub details endpoint
+- Updated unit tests to use `MockGithubRepository`
+
+#### 🤖 AI Usage
+- Update navigation arguments to support GitHub API details requests
 
 ---
 

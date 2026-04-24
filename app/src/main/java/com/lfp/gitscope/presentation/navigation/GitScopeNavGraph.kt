@@ -21,7 +21,10 @@ fun GitScopeNavGraph() {
             RepositoriesRoute(
                 onClick = { repository ->
                     navController.navigate(
-                        Destinations.repoDetailsRoute(repository.id)
+                        Destinations.repoDetailsRoute(
+                            owner = repository.ownerName,
+                            repo = repository.name
+                        )
                     )
                 }
             )
@@ -30,8 +33,11 @@ fun GitScopeNavGraph() {
         composable(
             route = Destinations.REPO_DETAILS_ROUTE_WITH_ARGS,
             arguments = listOf(
-                navArgument("repoId") {
-                    type = NavType.LongType
+                navArgument(Destinations.OWNER_ARG) {
+                    type = NavType.StringType
+                },
+                navArgument(Destinations.REPO_ARG) {
+                    type = NavType.StringType
                 }
             )
         ) {

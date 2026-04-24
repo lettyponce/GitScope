@@ -3,6 +3,7 @@ package com.lfp.gitscope.presentation.repository
 import app.cash.turbine.test
 import com.lfp.gitscope.data.mock.MockRepositories
 import com.lfp.gitscope.presentation.MainDispatcherRule
+import com.lfp.gitscope.presentation.mocks.MockGithubRepository
 import com.lfp.gitscope.presentation.repositories.RepositoriesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -20,7 +21,7 @@ class RepositoriesViewModelTest {
 
     @Test
     fun `when ViewModel is created then should expose list with same size as mock catalog on init`() = runTest {
-        val viewModel = RepositoriesViewModel()
+        val viewModel = RepositoriesViewModel( repository = MockGithubRepository() )
 
         viewModel.uiState.test {
             val state = awaitItem()
@@ -42,7 +43,7 @@ class RepositoriesViewModelTest {
 
     @Test
     fun `when ViewModel is created then should expose first repository with id name and owner matching mock catalog head on init`() = runTest {
-        val viewModel = RepositoriesViewModel()
+        val viewModel = RepositoriesViewModel( repository = MockGithubRepository())
 
         viewModel.uiState.test {
             val state = awaitItem()
