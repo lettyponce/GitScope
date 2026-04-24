@@ -76,9 +76,24 @@ This project was built using an incremental approach, focusing on delivering a w
 
 ---
 
+### Step 6 — GitHub API Integration & Repository Layer
+
+- Added GitHub REST API integration using Retrofit
+- Added DTOs for repository search and repository details responses
+- Added mappers to convert API responses into domain models
+- Added the domain layer
+- Added the data layer
+- Added Hilt modules for network and repository dependencies
+
+#### 🤖 AI Usage
+- Assisted in structuring DTOs and mappers for the GitHub API response
+- Helped define repository abstraction and Hilt modules
+
+
+---
+
 ### Next Steps
 
-- Integrate GitHub API
 - Add filtering/sorting features
 - Improve UX with loading/error/empty states
 - Add unit and UI tests

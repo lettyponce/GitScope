@@ -142,12 +142,15 @@ private fun RepositoryItemPreviewLongText() {
             repo = Repository(
                 id = 99,
                 name = "very-long-repository-name-for-preview-overflow",
+                fullName = "very-long-owner-name-for-preview/very-long-repository-name-for-preview-overflow",
                 ownerName = "very-long-owner-name-for-preview",
                 ownerAvatarUrl = "https://avatars.githubusercontent.com/u/9919?v=4",
                 description = "A very long description that should ellipsize after three lines in the repository card preview to verify overflow behavior in the layout.",
                 stars = 12_345,
                 forks = 999,
-                updatedAt = "2026-04-01"
+                updatedAt = "2026-04-01",
+                htmlUrl = "https://github.com/very-long-owner-name-for-preview/very-long-repository-name-for-preview-overflow",
+                language = "Kotlin"
             ),
             onClick = {},
             modifier = Modifier.padding(16.dp)
