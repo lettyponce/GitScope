@@ -33,6 +33,20 @@ This project was built using an incremental approach, focusing on delivering a w
 
 ---
 
+### Step 3 — Navigation & Details Screen
+
+- Implemented navigation using Navigation Compose
+- Added `RepositoryDetailsScreen`
+- Enabled navigation from repository list to details screen
+- Passed repository identifier through navigation arguments
+- Retrieved selected repository from mock data source
+- Added ellipsized title in Top App Bar
+
+#### 🤖 AI Usage
+- Assisted in structuring navigation routes and arguments
+- Helped define the initial structure of the details screen
+- Suggested preview configurations for faster UI iteration
+
 ### Next Steps
 
 - Add navigation and repository details screen

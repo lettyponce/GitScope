@@ -21,7 +21,7 @@ import com.lfp.gitscope.presentation.theme.GitScopeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RepositoryScreen(
+fun RepositoriesScreen(
     repositories: List<RepoInformation>,
     onRepositoryClick: (RepoInformation) -> Unit,
     modifier: Modifier = Modifier
@@ -63,9 +63,9 @@ fun RepositoryScreen(
 
 @Preview(showBackground = true, name = "Repository screen")
 @Composable
-private fun RepositoryScreenPreview() {
+private fun RepositoriesScreenPreview() {
     GitScopeTheme(dynamicColor = false) {
-        RepositoryScreen(
+        RepositoriesScreen(
             repositories = mockRepositories,
             onRepositoryClick = {}
         )
@@ -78,9 +78,9 @@ private fun RepositoryScreenPreview() {
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-private fun RepositoryScreenPreviewDark() {
+private fun RepositoriesScreenPreviewDark() {
     GitScopeTheme(dynamicColor = false) {
-        RepositoryScreen(
+        RepositoriesScreen(
             repositories = mockRepositories.take(3),
             onRepositoryClick = {}
         )
