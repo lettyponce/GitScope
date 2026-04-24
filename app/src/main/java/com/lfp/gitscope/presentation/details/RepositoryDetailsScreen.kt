@@ -24,14 +24,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.lfp.gitscope.presentation.repositories.RepoInformation
-import com.lfp.gitscope.presentation.repositories.mockRepositories
+import com.lfp.gitscope.data.mock.MockRepositories
+import com.lfp.gitscope.domain.model.Repository
 import com.lfp.gitscope.presentation.theme.GitScopeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RepoDetailsScreen(
-    repository: RepoInformation
+    repository: Repository
 ) {
     Scaffold(
         topBar = {
@@ -62,7 +62,7 @@ fun RepoDetailsScreen(
 
                 AsyncImage(
                     model = repository.ownerAvatarUrl,
-                    contentDescription = null,
+                    contentDescription = "Avatar de ${repository.ownerName}",
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape)
@@ -75,6 +75,12 @@ fun RepoDetailsScreen(
                         text = repository.ownerName,
                         style = MaterialTheme.typography.titleMedium
                     )
+
+                    Text(
+                        text = repository.name,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
 
@@ -85,7 +91,14 @@ fun RepoDetailsScreen(
 
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Text("⭐ ${repository.stars}")
+                Text("🍴 ${repository.forks}")
             }
+
+            Text(
+                text = "Updated at: ${repository.updatedAt}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
@@ -94,7 +107,7 @@ fun RepoDetailsScreen(
 @Composable
 private fun RepositoryDetailsScreenPreview() {
     GitScopeTheme(dynamicColor = false) {
-        RepoDetailsScreen(repository = mockRepositories.first())
+        RepoDetailsScreen(repository = MockRepositories.repositories.first())
     }
 }
 
@@ -106,7 +119,7 @@ private fun RepositoryDetailsScreenPreview() {
 @Composable
 private fun RepositoryDetailsScreenPreviewDark() {
     GitScopeTheme(dynamicColor = false) {
-        RepoDetailsScreen(repository = mockRepositories[1])
+        RepoDetailsScreen(repository = MockRepositories.repositories[1])
     }
 }
 
@@ -115,7 +128,7 @@ private fun RepositoryDetailsScreenPreviewDark() {
 private fun RepositoryDetailsScreenPreviewNoDescription() {
     GitScopeTheme(dynamicColor = false) {
         RepoDetailsScreen(
-            repository = mockRepositories[2].copy(description = null)
+            repository = MockRepositories.repositories[2].copy(description = null)
         )
     }
 }

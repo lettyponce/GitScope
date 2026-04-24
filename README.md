@@ -47,10 +47,26 @@ This project was built using an incremental approach, focusing on delivering a w
 - Helped define the initial structure of the details screen
 - Suggested preview configurations for faster UI iteration
 
+---
+
+### Step 4 — ViewModel & UI State with Mock Data
+
+- Added domain model `Repository`
+- Moved mock repositories to a mock data source
+- Introduced `RepositoriesViewModel`
+- Introduced `RepositoryDetailsViewModel`
+- Added UI state classes for list and details screens
+- Updated screens to render state instead of owning mock data directly
+- Added Route composables to connect ViewModels with UI screens
+
+#### 🤖 AI Usage
+- Assisted in defining the initial ViewModel structure
+- Update preview configurations after refactoring
+
+---
+
 ### Next Steps
 
-- Add navigation and repository details screen
-- Introduce ViewModels with state management
 - Integrate GitHub API
 - Add filtering/sorting features
 - Improve UX with loading/error/empty states

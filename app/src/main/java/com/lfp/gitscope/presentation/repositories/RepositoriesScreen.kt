@@ -17,16 +17,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.lfp.gitscope.data.mock.MockRepositories
+import com.lfp.gitscope.domain.model.Repository
 import com.lfp.gitscope.presentation.theme.GitScopeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RepositoriesScreen(
-    repositories: List<RepoInformation>,
-    onRepositoryClick: (RepoInformation) -> Unit,
+    repositories: List<Repository>,
+    onRepositoryClick: (Repository) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
@@ -66,7 +69,7 @@ fun RepositoriesScreen(
 private fun RepositoriesScreenPreview() {
     GitScopeTheme(dynamicColor = false) {
         RepositoriesScreen(
-            repositories = mockRepositories,
+            repositories = MockRepositories.repositories,
             onRepositoryClick = {}
         )
     }
@@ -81,7 +84,7 @@ private fun RepositoriesScreenPreview() {
 private fun RepositoriesScreenPreviewDark() {
     GitScopeTheme(dynamicColor = false) {
         RepositoriesScreen(
-            repositories = mockRepositories.take(3),
+            repositories = MockRepositories.repositories.take(3),
             onRepositoryClick = {}
         )
     }

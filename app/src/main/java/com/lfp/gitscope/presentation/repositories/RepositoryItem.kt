@@ -27,11 +27,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.lfp.gitscope.data.mock.MockRepositories
+import com.lfp.gitscope.domain.model.Repository
 import com.lfp.gitscope.presentation.theme.GitScopeTheme
 
 @Composable
 fun RepositoryItem(
-    repo: RepoInformation,
+    repo: Repository,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -109,7 +111,7 @@ fun RepositoryItem(
 private fun RepositoryItemPreview() {
     GitScopeTheme(dynamicColor = false) {
         RepositoryItem(
-            repo = mockRepositories.first(),
+            repo = MockRepositories.repositories.first(),
             onClick = {},
             modifier = Modifier.padding(16.dp)
         )
@@ -125,7 +127,7 @@ private fun RepositoryItemPreview() {
 private fun RepositoryItemPreviewDark() {
     GitScopeTheme(dynamicColor = false) {
         RepositoryItem(
-            repo = mockRepositories[1],
+            repo = MockRepositories.repositories[1],
             onClick = {},
             modifier = Modifier.padding(16.dp)
         )
@@ -137,13 +139,15 @@ private fun RepositoryItemPreviewDark() {
 private fun RepositoryItemPreviewLongText() {
     GitScopeTheme(dynamicColor = false) {
         RepositoryItem(
-            repo = RepoInformation(
+            repo = Repository(
                 id = 99,
                 name = "very-long-repository-name-for-preview-overflow",
                 ownerName = "very-long-owner-name-for-preview",
                 ownerAvatarUrl = "https://avatars.githubusercontent.com/u/9919?v=4",
                 description = "A very long description that should ellipsize after three lines in the repository card preview to verify overflow behavior in the layout.",
-                stars = 12_345
+                stars = 12_345,
+                forks = 999,
+                updatedAt = "2026-04-01"
             ),
             onClick = {},
             modifier = Modifier.padding(16.dp)
