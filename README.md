@@ -106,8 +106,21 @@ This project was built using an incremental approach, focusing on delivering a w
 
 ---
 
+### Step 8 — Language Filter & Sorting Options
+
+- Added a language search field to filter repositories by programming language
+- Added sorting options for: starts, forks and last updated
+- Updated `RepositoriesViewModel` to manage filter and sort state
+- Updated API requests to use the selected language and sort option
+- Added UI components for search and sorting
+
+#### 🤖 AI Usage
+- Defining the filter and sort state structure
+- Create reusable Compose components for search and sorting
+
+---
+
 ### Next Steps
 
-- Add filtering/sorting features
 - Improve UX with loading/error/empty states
 - Add unit and UI tests

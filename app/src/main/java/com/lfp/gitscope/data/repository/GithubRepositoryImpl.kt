@@ -1,5 +1,6 @@
 package com.lfp.gitscope.data.repository
 
+import android.util.Log
 import com.lfp.gitscope.data.model.toDomain
 import com.lfp.gitscope.data.remote.GithubApiService
 import com.lfp.gitscope.domain.model.Repository
@@ -18,6 +19,11 @@ class GithubRepositoryImpl @Inject constructor(
         val normalizedLanguage = language.trim().ifBlank { "kotlin" }
 
         val query = "language:$normalizedLanguage"
+
+        Log.d(
+            "GithubRepository",
+            "Searching query: $query sort: ${sortOption.apiValue}"
+        )
 
         return apiService.searchRepositories(
             query = query,

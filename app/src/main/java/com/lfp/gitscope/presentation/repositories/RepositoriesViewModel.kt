@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.lfp.gitscope.domain.model.RepositorySortOption
 import com.lfp.gitscope.domain.repository.GithubRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,15 +21,53 @@ class RepositoriesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(RepositoriesUiState())
     val uiState: StateFlow<RepositoriesUiState> = _uiState.asStateFlow()
 
+    private var searchJob: Job? = null
+    private var loadJob: Job? = null
+
     init {
-        loadRepositories()
+        loadRepositories(
+            language = _uiState.value.languageQuery,
+            sortOption = _uiState.value.selectedSortOption
+        )
+    }
+
+    fun onLanguageQueryChanged(query: String) {
+        _uiState.value = _uiState.value.copy(
+            languageQuery = query
+        )
+
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(500)
+            loadRepositories(
+                language = _uiState.value.languageQuery,
+                sortOption = _uiState.value.selectedSortOption
+            )
+        }
+    }
+
+    fun onSortOptionSelected(sortOption: RepositorySortOption) {
+        _uiState.value = _uiState.value.copy(
+            selectedSortOption = sortOption
+        )
+
+        loadRepositories(
+            language = _uiState.value.languageQuery,
+            sortOption = _uiState.value.selectedSortOption
+        )
     }
 
     fun loadRepositories(
-        language: String = "kotlin",
-        sortOption: RepositorySortOption = RepositorySortOption.STARS
+        language: String,
+        sortOption: RepositorySortOption
     ) {
-        viewModelScope.launch {
+        loadJob?.cancel()
+
+        val normalizedLanguage = language
+            .trim()
+            .ifBlank { "kotlin" }
+
+        loadJob = viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 isLoading = true,
                 errorMessage = null
@@ -35,7 +75,7 @@ class RepositoriesViewModel @Inject constructor(
 
             runCatching {
                 repository.searchRepositories(
-                    language = language,
+                    language = normalizedLanguage,
                     sortOption = sortOption
                 )
             }.onSuccess { repositories ->

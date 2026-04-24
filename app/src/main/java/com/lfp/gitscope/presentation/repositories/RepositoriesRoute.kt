@@ -15,6 +15,10 @@ fun RepositoriesRoute(
 
     RepositoriesScreen(
         repositories = uiState.repositories,
+        languageQuery = uiState.languageQuery,
+        selectedSortOption = uiState.selectedSortOption,
+        onLanguageQueryChanged = viewModel::onLanguageQueryChanged,
+        onSortOptionSelected = viewModel::onSortOptionSelected,
         onRepositoryClick = onClick
     )
 }
