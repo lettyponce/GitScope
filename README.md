@@ -65,6 +65,17 @@ This project was built using an incremental approach, focusing on delivering a w
 
 ---
 
+### Step 5 — Initial ViewModel Unit Tests
+
+- Added unit tests for `RepositoriesViewModel`
+- Added unit tests for `RepositoryDetailsViewModel`
+- Created `MainDispatcherRule` to replace `Dispatchers.Main` during JVM tests
+
+#### 🤖 AI Usage
+- Suggested using `MainDispatcherRule` for coroutine-based ViewModel tests
+
+---
+
 ### Next Steps
 
 - Integrate GitHub API
