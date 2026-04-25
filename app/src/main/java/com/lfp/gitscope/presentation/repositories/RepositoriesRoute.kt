@@ -30,6 +30,12 @@ fun RepositoriesRoute(
                 sortOption = uiState.selectedSortOption
             )
         },
+        onRefresh = {
+            viewModel.loadRepositories(
+                language = uiState.languageQuery,
+                sortOption = uiState.selectedSortOption
+            )
+        },
         onLanguageQueryChanged = viewModel::onLanguageQueryChanged,
         onSortOptionSelected = viewModel::onSortOptionSelected,
         onRepositoryClick = onClick
@@ -52,6 +58,7 @@ private fun RepositoriesRoutePreview() {
             isLoading = false,
             errorMessage = null,
             onRetryClick = {},
+            onRefresh = {},
             onLanguageQueryChanged = {},
             onSortOptionSelected = {},
             onRepositoryClick = {}
@@ -76,6 +83,7 @@ private fun RepositoriesRoutePreviewDark() {
             isLoading = false,
             errorMessage = null,
             onRetryClick = {},
+            onRefresh = {},
             onLanguageQueryChanged = {},
             onSortOptionSelected = {},
             onRepositoryClick = {}

@@ -29,6 +29,7 @@ class RepositoriesScreenTest {
                     isLoading = false,
                     errorMessage = null,
                     onRetryClick = {},
+                    onRefresh = {},
                     onLanguageQueryChanged = {},
                     onSortOptionSelected = {},
                     onRepositoryClick = {}
@@ -51,6 +52,7 @@ class RepositoriesScreenTest {
                     isLoading = false,
                     errorMessage = null,
                     onRetryClick = {},
+                    onRefresh = {},
                     onLanguageQueryChanged = {},
                     onSortOptionSelected = {},
                     onRepositoryClick = {}
@@ -77,6 +79,7 @@ class RepositoriesScreenTest {
                     isLoading = false,
                     errorMessage = null,
                     onRetryClick = {},
+                    onRefresh = {},
                     onLanguageQueryChanged = {},
                     onSortOptionSelected = {},
                     onRepositoryClick = { repository ->
@@ -102,6 +105,7 @@ class RepositoriesScreenTest {
                     isLoading = true,
                     errorMessage = null,
                     onRetryClick = {},
+                    onRefresh = {},
                     onLanguageQueryChanged = {},
                     onSortOptionSelected = {},
                     onRepositoryClick = {}
@@ -127,6 +131,7 @@ class RepositoriesScreenTest {
                     onRetryClick = {
                         retryClicked = true
                     },
+                    onRefresh = {},
                     onLanguageQueryChanged = {},
                     onSortOptionSelected = {},
                     onRepositoryClick = {}
@@ -153,6 +158,7 @@ class RepositoriesScreenTest {
                     isLoading = false,
                     errorMessage = null,
                     onRetryClick = {},
+                    onRefresh = {},
                     onLanguageQueryChanged = {},
                     onSortOptionSelected = {},
                     onRepositoryClick = {}

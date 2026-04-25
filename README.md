@@ -160,3 +160,12 @@ This project was built using an incremental approach, focusing on delivering a w
 
 #### 🤖 AI Usage
 - Helped identify where test tags may be useful for clickable components
+
+---
+
+### Step 12 — Pull to refresh
+
+- Pull-to-refresh on the repositories list
+
+#### 🤖 AI Usage
+- Wired refresh callback to the existing `loadRepositories` flow

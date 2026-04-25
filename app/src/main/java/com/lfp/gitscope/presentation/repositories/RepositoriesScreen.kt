@@ -2,12 +2,18 @@ package com.lfp.gitscope.presentation.repositories
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -15,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,7 +34,7 @@ import com.lfp.gitscope.presentation.components.LoadingContent
 import com.lfp.gitscope.presentation.theme.GitScopeTheme
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun RepositoriesScreen(
     repositories: List<Repository>,
@@ -36,6 +43,7 @@ fun RepositoriesScreen(
     isLoading: Boolean,
     errorMessage: String?,
     onRetryClick: () -> Unit,
+    onRefresh: () -> Unit,
     onLanguageQueryChanged: (String) -> Unit,
     onSortOptionSelected: (RepositorySortOption) -> Unit,
     onRepositoryClick: (Repository) -> Unit
@@ -61,7 +69,9 @@ fun RepositoriesScreen(
     ) { innerPadding ->
 
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
         ) {
             LanguageSearchField(
                 value = languageQuery,
@@ -78,29 +88,53 @@ fun RepositoriesScreen(
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
+            val showInitialFullScreenLoading =
+                isLoading && repositories.isEmpty() && errorMessage == null
+
             when {
-                isLoading -> {
-                    LoadingContent()
-                }
-
-                errorMessage != null -> {
-                    ErrorContent(
-                        message = errorMessage,
-                        onRetryClick = onRetryClick
-                    )
-                }
-
-                repositories.isEmpty() -> {
-                    EmptyContent(
-                        message = "No repositories found for \"$languageQuery\"."
-                    )
+                showInitialFullScreenLoading -> {
+                    LoadingContent(modifier = Modifier.weight(1f))
                 }
 
                 else -> {
-                    RepositoriesGrid(
-                        repositories = repositories,
-                        onRepositoryClick = onRepositoryClick
+                    val pullRefreshState = rememberPullRefreshState(
+                        refreshing = isLoading,
+                        onRefresh = onRefresh
                     )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxSize()
+                            .pullRefresh(pullRefreshState)
+                    ) {
+                        when {
+                            errorMessage != null -> {
+                                ErrorContent(
+                                    message = errorMessage,
+                                    onRetryClick = onRetryClick
+                                )
+                            }
+
+                            repositories.isEmpty() -> {
+                                EmptyContent(
+                                    message = "No repositories found for \"$languageQuery\"."
+                                )
+                            }
+
+                            else -> {
+                                RepositoriesGrid(
+                                    repositories = repositories,
+                                    onRepositoryClick = onRepositoryClick
+                                )
+                            }
+                        }
+                        PullRefreshIndicator(
+                            refreshing = isLoading,
+                            state = pullRefreshState,
+                            modifier = Modifier.align(Alignment.TopCenter),
+                            contentColor = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
         }
@@ -113,6 +147,7 @@ private fun RepositoriesGrid(
     onRepositoryClick: (Repository) -> Unit
 ) {
     LazyVerticalGrid(
+        modifier = Modifier.fillMaxSize(),
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -146,6 +181,7 @@ private fun RepositoriesScreenPreview() {
             isLoading = false,
             errorMessage = null,
             onRetryClick = {},
+            onRefresh = {},
             onLanguageQueryChanged = {},
             onSortOptionSelected = {},
             onRepositoryClick = {}
@@ -170,6 +206,7 @@ private fun RepositoriesScreenPreviewDark() {
             isLoading = false,
             errorMessage = null,
             onRetryClick = {},
+            onRefresh = {},
             onLanguageQueryChanged = {},
             onSortOptionSelected = {},
             onRepositoryClick = {}
@@ -193,6 +230,7 @@ private fun RepositoriesScreenPreviewEmpty() {
             isLoading = false,
             errorMessage = null,
             onRetryClick = {},
+            onRefresh = {},
             onLanguageQueryChanged = {},
             onSortOptionSelected = {},
             onRepositoryClick = {}
@@ -216,6 +254,7 @@ private fun RepositoriesScreenPreviewLoading() {
             isLoading = true,
             errorMessage = null,
             onRetryClick = {},
+            onRefresh = {},
             onLanguageQueryChanged = {},
             onSortOptionSelected = {},
             onRepositoryClick = {}
@@ -239,6 +278,7 @@ private fun RepositoriesScreenPreviewError() {
             isLoading = false,
             errorMessage = "Could not reach GitHub. Check your connection and try again.",
             onRetryClick = {},
+            onRefresh = {},
             onLanguageQueryChanged = {},
             onSortOptionSelected = {},
             onRepositoryClick = {}

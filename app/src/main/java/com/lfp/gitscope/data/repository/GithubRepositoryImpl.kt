@@ -37,14 +37,24 @@ class GithubRepositoryImpl @Inject constructor(
                 response.toDomain()
             }
         } catch (e: HttpException) {
-            if (e.code() == 422) {
-                Log.d(
-                    "GithubRepository",
-                    "Search returned 422 (invalid or unsupported query); treating as no results"
-                )
-                emptyList()
-            } else {
-                throw e
+            when (e.code()) {
+                422 -> {
+                    Log.d(
+                        "GithubRepository",
+                        "Search returned 422 (invalid or unsupported query); treating as no results"
+                    )
+                    emptyList()
+                }
+
+                403 -> {
+                    Log.d(
+                        "GithubRepository",
+                        "Search returned 403 (forbidden or rate limited); treating as no results"
+                    )
+                    emptyList()
+                }
+
+                else -> throw e
             }
         }
     }
