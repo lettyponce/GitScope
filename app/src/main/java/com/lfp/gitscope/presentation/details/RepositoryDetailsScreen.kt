@@ -31,7 +31,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.lfp.gitscope.core.common.GithubDateFormatter
+import com.lfp.gitscope.core.common.DateFormatter
 import com.lfp.gitscope.data.mock.MockRepositories
 import com.lfp.gitscope.domain.model.Repository
 import com.lfp.gitscope.presentation.theme.GitScopeTheme
@@ -96,7 +96,7 @@ fun RepositoryDetailsScreen(
         InfoRow(label = "Forks", value = repository.forks.toString())
         InfoRow(
             label = "Updated",
-            value = GithubDateFormatter.format(repository.updatedAt)
+            value = DateFormatter.format(repository.updatedAt)
         )
         InfoRow(label = "Open in browser", value = repository.htmlUrl)
     }

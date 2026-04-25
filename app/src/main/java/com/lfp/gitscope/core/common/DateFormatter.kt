@@ -10,7 +10,7 @@ import java.util.TimeZone
  * Formats GitHub API date strings (ISO-8601 with Z, or plain yyyy-MM-dd) for display.
  * Falls back to the original string when parsing fails (no java.time — minSdk 24 safe).
  */
-object GithubDateFormatter {
+object DateFormatter {
 
     private val utc: TimeZone = TimeZone.getTimeZone("UTC")
 

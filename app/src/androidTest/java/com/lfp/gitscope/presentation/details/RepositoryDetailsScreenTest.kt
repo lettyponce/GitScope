@@ -3,7 +3,7 @@ package com.lfp.gitscope.presentation.details
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import com.lfp.gitscope.core.common.GithubDateFormatter
+import com.lfp.gitscope.core.common.DateFormatter
 import com.lfp.gitscope.data.mock.MockRepositories
 import com.lfp.gitscope.presentation.theme.GitScopeTheme
 import org.junit.Rule
@@ -32,7 +32,7 @@ class RepositoryDetailsScreenTest {
         composeRule.onNodeWithText("Kotlin").assertIsDisplayed()
         composeRule.onNodeWithText("⭐ 1840").assertIsDisplayed()
         composeRule.onNodeWithText("230").assertIsDisplayed()
-        composeRule.onNodeWithText(GithubDateFormatter.format(repository.updatedAt)).assertIsDisplayed()
+        composeRule.onNodeWithText(DateFormatter.format(repository.updatedAt)).assertIsDisplayed()
         composeRule.onNodeWithText("https://github.com/android-dev/awesome-android-ui").assertIsDisplayed()
     }
 }
