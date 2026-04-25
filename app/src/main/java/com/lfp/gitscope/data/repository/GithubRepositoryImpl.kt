@@ -6,6 +6,7 @@ import com.lfp.gitscope.data.remote.GithubApiService
 import com.lfp.gitscope.domain.model.Repository
 import com.lfp.gitscope.domain.model.RepositorySortOption
 import com.lfp.gitscope.domain.repository.GithubRepository
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class GithubRepositoryImpl @Inject constructor(
@@ -25,14 +26,26 @@ class GithubRepositoryImpl @Inject constructor(
             "Searching query: $query sort: ${sortOption.apiValue}"
         )
 
-        return apiService.searchRepositories(
-            query = query,
-            sort = sortOption.apiValue,
-            order = "desc",
-            perPage = 30,
-            page = 1
-        ).items.map { response ->
-            response.toDomain()
+        return try {
+            apiService.searchRepositories(
+                query = query,
+                sort = sortOption.apiValue,
+                order = "desc",
+                perPage = 30,
+                page = 1
+            ).items.map { response ->
+                response.toDomain()
+            }
+        } catch (e: HttpException) {
+            if (e.code() == 422) {
+                Log.d(
+                    "GithubRepository",
+                    "Search returned 422 (invalid or unsupported query); treating as no results"
+                )
+                emptyList()
+            } else {
+                throw e
+            }
         }
     }
 

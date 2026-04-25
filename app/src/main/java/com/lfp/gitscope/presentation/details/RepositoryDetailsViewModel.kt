@@ -64,4 +64,8 @@ class RepositoryDetailsViewModel @Inject constructor(
             }
         }
     }
+
+    fun retryLoadRepositoryDetails() {
+        loadRepositoryDetails()
+    }
 }

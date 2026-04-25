@@ -120,7 +120,24 @@ This project was built using an incremental approach, focusing on delivering a w
 
 ---
 
+### Step 9 — Loading, Empty and Error State Handling
+
+- Added loading state for repositories and details screens
+- Added reusable `LoadingContent`, `ErrorContent`, and `EmptyContent` composables
+- Added retry action for failed requests
+- Added empty state when no repositories are returned
+- Updated screens to render content based on UI state
+- Improved UX feedback during network operations
+
+#### 🤖 AI Usage
+- Assisted in designing reusable state components
+- Define the UI state rendering strategy
+- Suggested retry handling for failed network requests
+
+---
+
+
+
 ### Next Steps
 
-- Improve UX with loading/error/empty states
 - Add unit and UI tests

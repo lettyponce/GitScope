@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import com.lfp.gitscope.data.mock.MockRepositories
 import com.lfp.gitscope.domain.model.Repository
 import com.lfp.gitscope.domain.model.RepositorySortOption
+import com.lfp.gitscope.presentation.components.EmptyContent
+import com.lfp.gitscope.presentation.components.ErrorContent
+import com.lfp.gitscope.presentation.components.LoadingContent
 import com.lfp.gitscope.presentation.theme.GitScopeTheme
 
 
@@ -30,6 +33,9 @@ fun RepositoriesScreen(
     repositories: List<Repository>,
     languageQuery: String,
     selectedSortOption: RepositorySortOption,
+    isLoading: Boolean,
+    errorMessage: String?,
+    onRetryClick: () -> Unit,
     onLanguageQueryChanged: (String) -> Unit,
     onSortOptionSelected: (RepositorySortOption) -> Unit,
     onRepositoryClick: (Repository) -> Unit
@@ -72,24 +78,54 @@ fun RepositoriesScreen(
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(
-                    items = repositories,
-                    key = { repository -> repository.id }
-                ) { repository ->
-                    RepositoryItem(
-                        repo = repository,
-                        onClick = {
-                            onRepositoryClick(repository)
-                        }
+            when {
+                isLoading -> {
+                    LoadingContent()
+                }
+
+                errorMessage != null -> {
+                    ErrorContent(
+                        message = errorMessage,
+                        onRetryClick = onRetryClick
+                    )
+                }
+
+                repositories.isEmpty() -> {
+                    EmptyContent(
+                        message = "No repositories found for \"$languageQuery\"."
+                    )
+                }
+
+                else -> {
+                    RepositoriesGrid(
+                        repositories = repositories,
+                        onRepositoryClick = onRepositoryClick
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun RepositoriesGrid(
+    repositories: List<Repository>,
+    onRepositoryClick: (Repository) -> Unit
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        items(
+            items = repositories,
+            key = { repository -> repository.id }
+        ) { repository ->
+            RepositoryItem(
+                repo = repository,
+                onClick = { onRepositoryClick(repository) }
+            )
         }
     }
 }
@@ -107,6 +143,9 @@ private fun RepositoriesScreenPreview() {
             repositories = MockRepositories.repositories,
             languageQuery = "kotlin",
             selectedSortOption = RepositorySortOption.STARS,
+            isLoading = false,
+            errorMessage = null,
+            onRetryClick = {},
             onLanguageQueryChanged = {},
             onSortOptionSelected = {},
             onRepositoryClick = {}
@@ -128,6 +167,9 @@ private fun RepositoriesScreenPreviewDark() {
             repositories = MockRepositories.repositories.take(3),
             languageQuery = "Rust, TypeScript",
             selectedSortOption = RepositorySortOption.FORKS,
+            isLoading = false,
+            errorMessage = null,
+            onRetryClick = {},
             onLanguageQueryChanged = {},
             onSortOptionSelected = {},
             onRepositoryClick = {}
@@ -148,6 +190,55 @@ private fun RepositoriesScreenPreviewEmpty() {
             repositories = emptyList(),
             languageQuery = "",
             selectedSortOption = RepositorySortOption.UPDATED,
+            isLoading = false,
+            errorMessage = null,
+            onRetryClick = {},
+            onLanguageQueryChanged = {},
+            onSortOptionSelected = {},
+            onRepositoryClick = {}
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    name = "Repositories screen (loading)",
+    widthDp = 411,
+    heightDp = 891
+)
+@Composable
+private fun RepositoriesScreenPreviewLoading() {
+    GitScopeTheme(dynamicColor = false) {
+        RepositoriesScreen(
+            repositories = emptyList(),
+            languageQuery = "kotlin",
+            selectedSortOption = RepositorySortOption.STARS,
+            isLoading = true,
+            errorMessage = null,
+            onRetryClick = {},
+            onLanguageQueryChanged = {},
+            onSortOptionSelected = {},
+            onRepositoryClick = {}
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    name = "Repositories screen (error)",
+    widthDp = 411,
+    heightDp = 891
+)
+@Composable
+private fun RepositoriesScreenPreviewError() {
+    GitScopeTheme(dynamicColor = false) {
+        RepositoriesScreen(
+            repositories = emptyList(),
+            languageQuery = "kotlin",
+            selectedSortOption = RepositorySortOption.STARS,
+            isLoading = false,
+            errorMessage = "Could not reach GitHub. Check your connection and try again.",
+            onRetryClick = {},
             onLanguageQueryChanged = {},
             onSortOptionSelected = {},
             onRepositoryClick = {}

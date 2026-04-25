@@ -79,16 +79,39 @@ fun SortOptionsMenu(
 @Composable
 private fun SortOptionsMenuPreview() {
     GitScopeTheme(dynamicColor = false) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            contentAlignment = Alignment.TopEnd
-        ) {
-            SortOptionsMenu(
-                selectedSortOption = RepositorySortOption.STARS,
-                onSortOptionSelected = {}
-            )
-        }
+        SortOptionsMenuPreviewSurface(
+            selectedSortOption = RepositorySortOption.STARS
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    name = "Sort options menu (dark)",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+private fun SortOptionsMenuPreviewDark() {
+    GitScopeTheme(dynamicColor = false) {
+        SortOptionsMenuPreviewSurface(
+            selectedSortOption = RepositorySortOption.UPDATED
+        )
+    }
+}
+
+@Composable
+private fun SortOptionsMenuPreviewSurface(
+    selectedSortOption: RepositorySortOption
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        contentAlignment = Alignment.TopEnd
+    ) {
+        SortOptionsMenu(
+            selectedSortOption = selectedSortOption,
+            onSortOptionSelected = {}
+        )
     }
 }
