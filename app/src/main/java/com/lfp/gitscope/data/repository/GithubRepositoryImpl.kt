@@ -7,11 +7,14 @@ import com.lfp.gitscope.domain.model.Repository
 import com.lfp.gitscope.domain.model.RepositorySortOption
 import com.lfp.gitscope.domain.repository.GithubRepository
 import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 class GithubRepositoryImpl @Inject constructor(
     private val apiService: GithubApiService
 ) : GithubRepository {
+
+    private var cachedRepositories: List<Repository>? = null
 
     override suspend fun searchRepositories(
         language: String,
@@ -27,7 +30,7 @@ class GithubRepositoryImpl @Inject constructor(
         )
 
         return try {
-            apiService.searchRepositories(
+            val repositories = apiService.searchRepositories(
                 query = query,
                 sort = sortOption.apiValue,
                 order = "desc",
@@ -36,6 +39,8 @@ class GithubRepositoryImpl @Inject constructor(
             ).items.map { response ->
                 response.toDomain()
             }
+            cachedRepositories = repositories
+            repositories
         } catch (e: HttpException) {
             when (e.code()) {
                 422 -> {
@@ -54,8 +59,21 @@ class GithubRepositoryImpl @Inject constructor(
                     emptyList()
                 }
 
-                else -> throw e
+                else -> cachedRepositories?.also {
+                    Log.d(
+                        "GithubRepository",
+                        "Search HTTP ${e.code()}; returning ${it.size} cached repositories"
+                    )
+                } ?: throw e
             }
+        } catch (e: IOException) {
+            cachedRepositories?.also {
+                Log.d(
+                    "GithubRepository",
+                    "Network error; returning ${it.size} cached repositories",
+                    e
+                )
+            } ?: throw e
         }
     }
 
