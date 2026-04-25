@@ -151,6 +151,12 @@ This project was built using an incremental approach, focusing on delivering a w
 - Assisted in structuring the details screen layout
 - Suggested improvements for navigation and state handling
 
-### Next Steps
+---
 
-- Add unit and UI tests
+### Step 11 — Compose UI Tests
+
+- Added Compose UI tests for `RepositoriesScreen`
+- Added UI test coverage for `RepositoryDetailsScreen`
+
+#### 🤖 AI Usage
+- Helped identify where test tags may be useful for clickable components
