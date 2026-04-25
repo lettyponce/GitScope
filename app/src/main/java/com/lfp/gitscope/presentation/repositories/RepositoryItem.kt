@@ -91,6 +91,7 @@ fun RepositoryItem(
                 text = repo.description ?: "No description available.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                minLines = 3,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
