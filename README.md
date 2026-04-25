@@ -1,5 +1,39 @@
 # GitScope
 
+## Architecture
+
+This project follows an MVVM-based architecture with a clear separation between UI, state management, domain models, and data access.
+
+### Layers
+
+- `presentation`
+    - Compose screens, reusable UI components, navigation routes and ViewModels.
+    - Screens are stateless whenever possible and receive state/callbacks from Route composables.
+
+- `domain`
+    - App models and repository contracts.
+    - Keeps the UI independent from API response models.
+
+- `data`
+    - API DTOs, mappers, Retrofit service and repository implementation.
+    - Converts GitHub API responses into domain models before exposing them to the rest of the app.
+
+- `di`
+    - Hilt modules responsible for providing network and repository dependencies.
+
+- `core`
+    - Shared utilities used across the app, such as date formatting.
+
+### State Management
+
+The UI is driven by `StateFlow` exposed from ViewModels.  
+Each screen reacts to its own UI state, including loading, success, empty and error scenarios.
+
+### Dependency Injection
+
+Hilt is used to inject dependencies into ViewModels and data classes through constructor injection.  
+This keeps the UI layer decoupled from concrete implementations and makes testing easier.
+
 ## Development Approach (Step-by-step Evolution)
 
 This project was built using an incremental approach, focusing on delivering a working user experience early and progressively integrating data, architecture, and quality improvements.
@@ -109,7 +143,7 @@ This project was built using an incremental approach, focusing on delivering a w
 ### Step 8 — Language Filter & Sorting Options
 
 - Added a language search field to filter repositories by programming language
-- Added sorting options for: starts, forks and last updated
+- Added sorting options for: stars, forks and last updated
 - Updated `RepositoriesViewModel` to manage filter and sort state
 - Updated API requests to use the selected language and sort option
 - Added UI components for search and sorting
@@ -169,3 +203,24 @@ This project was built using an incremental approach, focusing on delivering a w
 
 #### 🤖 AI Usage
 - Wired refresh callback to the existing `loadRepositories` flow
+
+---
+
+### Step 13 — App Icon & Splash Screen
+
+- Added a custom GitScope app icon using VectorDrawable
+- Configured adaptive launcher icons
+- Added Android SplashScreen API
+- Updated the launch theme to show the app icon before loading the main screen
+
+#### 🤖 AI Usage
+- Creating a simple vector-based app icon
+- Configure Android adaptive icons and SplashScreen theme
+
+---
+
+### Additional Improvements
+
+- Basic offline support using in-memory cache:
+    - The last successful repository list is cached
+    - If the network request fails, cached data is displayed
