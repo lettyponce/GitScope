@@ -18,10 +18,11 @@ import com.lfp.gitscope.presentation.theme.GitScopeTheme
 @Composable
 fun ErrorContent(
     message: String,
-    onRetryClick: () -> Unit
+    onRetryClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

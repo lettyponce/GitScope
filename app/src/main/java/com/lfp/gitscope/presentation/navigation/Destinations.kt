@@ -8,7 +8,7 @@ object Destinations {
     const val REPO_DETAILS_ROUTE = "repo_details"
     const val OWNER_ARG = "owner"
     const val REPO_ARG = "repo"
-    const val REPO_DETAILS_ROUTE_WITH_ARGS = "repo_details/{repoId}"
+    const val REPO_DETAILS_ROUTE_WITH_ARGS = "repo_details/{owner}/{repo}"
 
     fun repoDetailsRoute(
         owner: String,

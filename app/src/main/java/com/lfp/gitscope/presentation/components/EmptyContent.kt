@@ -16,10 +16,11 @@ import com.lfp.gitscope.presentation.theme.GitScopeTheme
 
 @Composable
 fun EmptyContent(
-    message: String
+    message: String,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

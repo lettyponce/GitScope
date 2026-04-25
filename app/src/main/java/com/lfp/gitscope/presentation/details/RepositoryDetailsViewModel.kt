@@ -21,7 +21,12 @@ class RepositoryDetailsViewModel @Inject constructor(
     private val owner: String? = savedStateHandle[Destinations.OWNER_ARG]
     private val repoName: String? = savedStateHandle[Destinations.REPO_ARG]
 
-    private val _uiState = MutableStateFlow(RepositoryDetailsUiState())
+    private val pendingTitle: String =
+        listOfNotNull(owner?.takeIf { it.isNotBlank() }, repoName?.takeIf { it.isNotBlank() })
+            .joinToString("/")
+            .ifBlank { "Details" }
+
+    private val _uiState = MutableStateFlow(RepositoryDetailsUiState(pendingTitle = pendingTitle))
     val uiState: StateFlow<RepositoryDetailsUiState> = _uiState.asStateFlow()
 
     init {

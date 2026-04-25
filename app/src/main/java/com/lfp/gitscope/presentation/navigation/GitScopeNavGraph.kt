@@ -41,7 +41,9 @@ fun GitScopeNavGraph() {
                 }
             )
         ) {
-            RepositoryDetailsRoute()
+            RepositoryDetailsRoute(
+                onBackClick = { navController.popBackStack() }
+            )
         }
     }
 }

@@ -16,9 +16,12 @@ import androidx.compose.ui.unit.dp
 import com.lfp.gitscope.presentation.theme.GitScopeTheme
 
 @Composable
-fun LoadingContent() {
+fun LoadingContent(
+    modifier: Modifier = Modifier,
+    message: String = "Loading repositories..."
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(top = 48.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -27,7 +30,7 @@ fun LoadingContent() {
         CircularProgressIndicator()
 
         Text(
-            text = "Loading repositories...",
+            text = message,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(top = 12.dp)
         )
