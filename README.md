@@ -1,5 +1,21 @@
 # GitScope
 
+## Screenshots
+
+Splash screen, repository search (language filter and sort), and repository details.
+
+### Splash screen
+
+![Splash screen](docs/screenshots/splash.png)
+
+### Repositories
+
+![GitHub repositories list with language filter](docs/screenshots/repositories.png)
+
+### Repository details
+
+![Repository details screen](docs/screenshots/repository-details.png)
+
 ## Architecture
 
 This project follows an MVVM-based architecture with a clear separation between UI, state management, domain models, and data access.
