@@ -136,7 +136,20 @@ This project was built using an incremental approach, focusing on delivering a w
 
 ---
 
+### Step 10 — Repository Details UX & Navigation Fix
 
+- Improved `RepositoryDetailsRoute` with proper **loading, error, empty and success states**
+- Added back navigation using `NavController.popBackStack()`
+- Connected retry action to `RepositoryDetailsViewModel`
+- Refactored `RepositoryDetailsScreen` with scrollable content
+- Added `GithubDateFormatter` to format dates
+- Improved TopAppBar title with `pendingTitle` while loading
+- Updated reusable components (`LoadingContent`, `ErrorContent`, `EmptyContent`) to support padding and customization
+- Fixed navigation route mismatch (`repo_details/{owner}/{repo}`)
+
+#### 🤖 AI Usage
+- Assisted in structuring the details screen layout
+- Suggested improvements for navigation and state handling
 
 ### Next Steps
 
