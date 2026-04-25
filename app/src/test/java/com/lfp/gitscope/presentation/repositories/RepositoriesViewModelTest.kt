@@ -1,10 +1,9 @@
-package com.lfp.gitscope.presentation.repository
+package com.lfp.gitscope.presentation.repositories
 
 import app.cash.turbine.test
 import com.lfp.gitscope.data.mock.MockRepositories
 import com.lfp.gitscope.presentation.MainDispatcherRule
 import com.lfp.gitscope.presentation.mocks.MockGithubRepository
-import com.lfp.gitscope.presentation.repositories.RepositoriesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
