@@ -4,17 +4,13 @@
 
 Splash screen, repository search (language filter and sort), and repository details.
 
-### Splash screen
-
-![Splash screen](docs/screenshots/splash.png)
-
-### Repositories
-
-![GitHub repositories list with language filter](docs/screenshots/repositories.png)
-
-### Repository details
-
-![Repository details screen](docs/screenshots/repository-details.png)
+<p align="center">
+  <img src="docs/screenshots/splash.png" width="200" alt="Splash screen" />
+  &nbsp;&nbsp;
+  <img src="docs/screenshots/repositories.png" width="200" alt="GitHub repositories list with language filter" />
+  &nbsp;&nbsp;
+  <img src="docs/screenshots/repository-details.png" width="200" alt="Repository details screen" />
+</p>
 
 ## Architecture
 
