@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -85,9 +86,17 @@ class RepositoriesViewModel @Inject constructor(
                     errorMessage = null
                 )
             }.onFailure { throwable ->
+                val errorMessage = when {
+                    throwable is HttpException && throwable.code() == 403 ->
+                        "GitHub request unavailable or access restricted. Please try again later."
+
+                    else ->
+                        throwable.message ?: "Unable to load repositories"
+                }
+
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    errorMessage = throwable.message ?: "Unable to load repositories"
+                    errorMessage = errorMessage
                 )
             }
         }

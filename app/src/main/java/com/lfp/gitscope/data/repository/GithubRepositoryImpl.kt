@@ -52,11 +52,12 @@ class GithubRepositoryImpl @Inject constructor(
                 }
 
                 403 -> {
-                    Log.d(
+                    Log.w(
                         "GithubRepository",
-                        "Search returned 403 (forbidden or rate limited); treating as no results"
+                        "Search returned 403 (forbidden or rate limited); treating as no results",
+                        e
                     )
-                    emptyList()
+                    throw e
                 }
 
                 else -> cachedRepositories?.also {
