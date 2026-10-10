@@ -15,6 +15,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -106,6 +107,70 @@ class RepositoriesViewModelTest {
         assertEquals(
             "GitHub request unavailable or access restricted. Please try again later.",
             state.errorMessage
+        )
+    }
+
+    @Test
+    fun `when retry succeeds after 403 then ViewModel should recover`() = runTest {
+        // Arrange
+        var requestCount = 0
+
+        val fakeRepository = object : GithubRepository {
+
+            override suspend fun searchRepositories(
+                language: String,
+                sortOption: RepositorySortOption
+            ): List<Repository> {
+                requestCount++
+
+                if (requestCount == 1) {
+                    throw HttpException(
+                        Response.error<Any>(
+                            403,
+                            "{}".toResponseBody()
+                        )
+                    )
+                }
+
+                return MockRepositories.repositories
+            }
+
+            override suspend fun getRepositoryDetails(
+                owner: String,
+                repoName: String
+            ): Repository {
+                error("Not used in this test")
+            }
+        }
+
+        val viewModel = RepositoriesViewModel(fakeRepository)
+
+        // First request fails
+        advanceUntilIdle()
+
+        val errorState = viewModel.uiState.value
+
+        assertFalse(errorState.isLoading)
+        assertTrue(errorState.errorMessage != null)
+        assertTrue(errorState.repositories.isEmpty())
+
+        // Act: simulate retry
+        viewModel.loadRepositories(
+            language = errorState.languageQuery,
+            sortOption = errorState.selectedSortOption
+        )
+
+        advanceUntilIdle()
+
+        // Assert
+        val recoveredState = viewModel.uiState.value
+
+        assertEquals(2, requestCount)
+        assertFalse(recoveredState.isLoading)
+        assertEquals(null, recoveredState.errorMessage)
+        assertEquals(
+            MockRepositories.repositories.size,
+            recoveredState.repositories.size
         )
     }
 }
