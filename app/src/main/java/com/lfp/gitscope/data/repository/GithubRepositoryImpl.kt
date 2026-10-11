@@ -14,13 +14,28 @@ class GithubRepositoryImpl @Inject constructor(
     private val apiService: GithubApiService
 ) : GithubRepository {
 
-    private var cachedRepositories: List<Repository>? = null
+    private data class CacheKey(
+        val language: String,
+        val sortOption: RepositorySortOption
+    )
+
+    private val cachedRepositories =
+        mutableMapOf<CacheKey, List<Repository>>()
 
     override suspend fun searchRepositories(
         language: String,
         sortOption: RepositorySortOption
     ): List<Repository> {
-        val normalizedLanguage = language.trim().ifBlank { "kotlin" }
+
+        val normalizedLanguage = language
+            .trim()
+            .ifBlank { "kotlin" }
+            .lowercase(java.util.Locale.ROOT)
+
+        val cacheKey = CacheKey(
+            language = normalizedLanguage,
+            sortOption = sortOption
+        )
 
         val query = "language:$normalizedLanguage"
 
@@ -39,8 +54,13 @@ class GithubRepositoryImpl @Inject constructor(
             ).items.map { response ->
                 response.toDomain()
             }
-            cachedRepositories = repositories
+
+            // Store results for this specific query.
+            cachedRepositories[cacheKey] = repositories
+
+            // Return the successful API result.
             repositories
+
         } catch (e: HttpException) {
             when (e.code()) {
                 422 -> {
@@ -54,21 +74,24 @@ class GithubRepositoryImpl @Inject constructor(
                 403 -> {
                     Log.w(
                         "GithubRepository",
-                        "Search returned 403 (forbidden or rate limited); treating as no results",
+                        "Search returned 403 (forbidden or rate limited)",
                         e
                     )
                     throw e
                 }
 
-                else -> cachedRepositories?.also {
-                    Log.d(
-                        "GithubRepository",
-                        "Search HTTP ${e.code()}; returning ${it.size} cached repositories"
-                    )
-                } ?: throw e
+                else -> {
+                    cachedRepositories[cacheKey]?.also {
+                        Log.d(
+                            "GithubRepository",
+                            "Search HTTP ${e.code()}; returning ${it.size} cached repositories"
+                        )
+                    } ?: throw e
+                }
             }
+
         } catch (e: IOException) {
-            cachedRepositories?.also {
+            cachedRepositories[cacheKey]?.also {
                 Log.d(
                     "GithubRepository",
                     "Network error; returning ${it.size} cached repositories",
