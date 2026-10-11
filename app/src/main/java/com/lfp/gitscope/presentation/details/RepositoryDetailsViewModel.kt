@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class RepositoryDetailsViewModel @Inject constructor(
@@ -50,21 +51,26 @@ class RepositoryDetailsViewModel @Inject constructor(
                 errorMessage = null
             )
 
-            runCatching {
-                githubRepository.getRepositoryDetails(
+            try {
+                val repository = githubRepository.getRepositoryDetails(
                     owner = safeOwner,
                     repoName = safeRepoName
                 )
-            }.onSuccess { repository ->
+
                 _uiState.value = _uiState.value.copy(
                     repository = repository,
                     isLoading = false,
                     errorMessage = null
                 )
-            }.onFailure { throwable ->
+
+            } catch (e: CancellationException) {
+                throw e
+
+            } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    errorMessage = throwable.message ?: "Unable to load repository details"
+                    errorMessage = e.message
+                        ?: "Unable to load repository details"
                 )
             }
         }
