@@ -1,5 +1,30 @@
 # GitScope
 
+[![Android CI](https://github.com/lettyponce/GitScope/actions/workflows/android-ci.yml/badge.svg)](https://github.com/lettyponce/GitScope/actions/workflows/android-ci.yml)
+
+GitScope is a native Android application for exploring GitHub repositories by programming language, with sorting, repository details, and resilient network handling.
+
+Built with Kotlin and Jetpack Compose, the project demonstrates modern Android engineering practices, including MVVM architecture, reactive UI state, dependency injection, automated testing, and continuous integration.
+
+## Tech Stack
+
+| Area | Technologies |
+|---|---|
+| Language | Kotlin |
+| UI | Jetpack Compose, Material 3 |
+| Architecture | MVVM, Repository Pattern |
+| State Management | StateFlow, Coroutines |
+| Dependency Injection | Hilt |
+| Networking | Retrofit, OkHttp |
+| Image Loading | Coil |
+| Navigation | Navigation Compose |
+| Unit Testing | JUnit 4, Coroutines Test, Test Fakes |
+| UI Testing | Compose UI Test |
+| CI | GitHub Actions, Gradle, Android Lint |
+
+
+
+
 ## Screenshots
 
 Splash screen, repository search (language filter and sort), and repository details.
@@ -11,6 +36,9 @@ Splash screen, repository search (language filter and sort), and repository deta
   &nbsp;&nbsp;
   <img src="docs/screenshots/repository-details.png" width="200" alt="Repository details screen" />
 </p>
+
+
+
 
 ## Architecture
 
@@ -45,6 +73,58 @@ Each screen reacts to its own UI state, including loading, success, empty and er
 
 Hilt is used to inject dependencies into ViewModels and data classes through constructor injection.  
 This keeps the UI layer decoupled from concrete implementations and makes testing easier.
+
+
+
+
+## Testing & Quality
+
+GitScope includes automated tests covering presentation and data-layer behavior.
+
+### Unit Tests
+
+JUnit 4 and Kotlin Coroutines Test are used to validate ViewModel and repository behavior.
+
+Covered scenarios include:
+
+- Repository loading and UI state transitions
+- GitHub API error handling, including HTTP 403
+- Recovery through retry actions
+- In-memory cache behavior for different search parameters
+- Coroutine cancellation without exposing cancellation as a UI error
+
+Test doubles are used to simulate repository and API responses without depending on live GitHub API requests.
+
+### Compose UI Tests
+
+Compose UI tests cover repository list and repository details interactions.
+
+These instrumented tests are maintained separately from the current JVM-based CI pipeline.
+
+### Continuous Integration
+
+GitHub Actions runs automatically on pushes and pull requests targeting `main`.
+
+The pipeline performs:
+
+1. JVM unit tests (`testDebugUnitTest`)
+2. Debug APK compilation (`assembleDebug`)
+3. Android Lint analysis (`lintDebug`)
+
+Each execution publishes a test summary with passed, failed, and skipped test counts.
+
+JUnit XML reports, HTML test reports, and Android Lint output are collected as downloadable artifacts.
+
+### Run Locally
+
+```bash
+./gradlew testDebugUnitTest assembleDebug lintDebug
+```
+
+The project uses JDK 17 for local and CI builds.
+
+
+
 
 ## Development Approach (Step-by-step Evolution)
 
@@ -231,8 +311,16 @@ This project was built using an incremental approach, focusing on delivering a w
 
 ---
 
+
 ### Additional Improvements
 
-- Basic offline support using in-memory cache:
-    - The last successful repository list is cached
-    - If the network request fails, cached data is displayed
+- In-memory repository cache:
+    - Stores successful search results by normalized programming language and sorting option
+    - Reuses cached results for matching queries when eligible network failures occur
+    - Prevents cached results from one query being displayed for another
+    - Does not provide persistent offline storage
+- Improved API error handling:
+    - HTTP 403 responses are exposed as errors instead of empty results
+    - Failed requests support recovery through the existing retry flow
+- Coroutine cancellation handling:
+    - ViewModels propagate `CancellationException` instead of treating cancellation as a request failure
