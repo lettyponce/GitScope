@@ -1,5 +1,6 @@
 package com.lfp.gitscope.data.repository
 
+import com.lfp.gitscope.data.fake.FakeGithubApiService
 import com.lfp.gitscope.data.model.GithubRepositoryResponse
 import com.lfp.gitscope.data.model.SearchRepositoriesResponse
 import com.lfp.gitscope.data.remote.GithubApiService
@@ -12,6 +13,7 @@ import org.junit.Assert.fail
 import org.junit.Test
 import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 
 class GithubRepositoryImplTest {
 
@@ -95,5 +97,56 @@ class GithubRepositoryImplTest {
 
         // Assert
         assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `when network fails for same query then return cached results`() = runTest {
+        val api = FakeGithubApiService()
+        val repository = GithubRepositoryImpl(api)
+
+        repository.searchRepositories("kotlin", RepositorySortOption.STARS)
+
+        api.shouldFail = true
+
+        val result = repository.searchRepositories(
+            "kotlin",
+            RepositorySortOption.STARS
+        )
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `when language changes then cached results must not be reused`() = runTest {
+        val api = FakeGithubApiService()
+        val repository = GithubRepositoryImpl(api)
+
+        repository.searchRepositories("kotlin", RepositorySortOption.STARS)
+
+        api.shouldFail = true
+
+        try {
+            repository.searchRepositories("swift", RepositorySortOption.STARS)
+            fail("Expected IOException for uncached query")
+        } catch (exception: IOException) {
+            assertEquals("Simulated network failure", exception.message)
+        }
+    }
+
+    @Test
+    fun `when sort changes then cached results must not be reused`() = runTest {
+        val api = FakeGithubApiService()
+        val repository = GithubRepositoryImpl(api)
+
+        repository.searchRepositories("kotlin", RepositorySortOption.STARS)
+
+        api.shouldFail = true
+
+        try {
+            repository.searchRepositories("kotlin", RepositorySortOption.FORKS)
+            fail("Expected IOException for uncached sort option")
+        } catch (exception: IOException) {
+            assertEquals("Simulated network failure", exception.message)
+        }
     }
 }
