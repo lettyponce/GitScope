@@ -7,17 +7,20 @@ import com.lfp.gitscope.domain.model.RepositorySortOption
 import com.lfp.gitscope.domain.repository.GithubRepository
 import com.lfp.gitscope.presentation.MainDispatcherRule
 import com.lfp.gitscope.presentation.mocks.MockGithubRepository
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
-import retrofit2.HttpException
-import retrofit2.Response
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
+import retrofit2.HttpException
+import retrofit2.Response
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -171,6 +174,69 @@ class RepositoriesViewModelTest {
         assertEquals(
             MockRepositories.repositories.size,
             recoveredState.repositories.size
+        )
+    }
+
+    @Test
+    fun `when previous search is cancelled then it should not emit error`() = runTest {
+        // Arrange: the first search remains running.
+        val pendingFirstSearch = CompletableDeferred<List<Repository>>()
+        val observedStates = mutableListOf<RepositoriesUiState>()
+
+        var requestCount = 0
+
+        val fakeRepository = object : GithubRepository {
+
+            override suspend fun searchRepositories(
+                language: String,
+                sortOption: RepositorySortOption
+            ): List<Repository> {
+                requestCount++
+
+                return if (requestCount == 1) {
+                    pendingFirstSearch.await()
+                } else {
+                    MockRepositories.repositories
+                }
+            }
+
+            override suspend fun getRepositoryDetails(
+                owner: String,
+                repoName: String
+            ): Repository {
+                error("Not used in this test")
+            }
+        }
+
+        val viewModel = RepositoriesViewModel(fakeRepository)
+
+        // Observes all transitions, including intermediate ones.
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.uiState.collect { state ->
+                observedStates.add(state)
+            }
+        }
+
+        // Action: starting another search cancels the first one.
+        viewModel.loadRepositories(
+            language = "swift",
+            sortOption = RepositorySortOption.STARS
+        )
+
+        advanceUntilIdle()
+
+        // Assert: the new search has been completed.
+        assertEquals(2, requestCount)
+        assertEquals(
+            MockRepositories.repositories,
+            viewModel.uiState.value.repositories
+        )
+        assertFalse(viewModel.uiState.value.isLoading)
+
+        // Cancellation must not result in an error state
+        assertTrue(
+            "Cancelled requests must not emit UI errors",
+            observedStates.none { it.errorMessage != null }
         )
     }
 }
