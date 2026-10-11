@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class RepositoriesViewModel @Inject constructor(
@@ -74,24 +75,28 @@ class RepositoriesViewModel @Inject constructor(
                 errorMessage = null
             )
 
-            runCatching {
-                repository.searchRepositories(
+            try {
+                val repositories = repository.searchRepositories(
                     language = normalizedLanguage,
                     sortOption = sortOption
                 )
-            }.onSuccess { repositories ->
+
                 _uiState.value = _uiState.value.copy(
                     repositories = repositories,
                     isLoading = false,
                     errorMessage = null
                 )
-            }.onFailure { throwable ->
+
+            } catch (e: CancellationException) {
+                throw e
+
+            } catch (e: Exception) {
                 val errorMessage = when {
-                    throwable is HttpException && throwable.code() == 403 ->
+                    e is HttpException && e.code() == 403 ->
                         "GitHub request unavailable or access restricted. Please try again later."
 
                     else ->
-                        throwable.message ?: "Unable to load repositories"
+                        e.message ?: "Unable to load repositories"
                 }
 
                 _uiState.value = _uiState.value.copy(
