@@ -1,6 +1,12 @@
 # GitScope
 
+
 [![Android CI](https://github.com/lettyponce/GitScope/actions/workflows/android-ci.yml/badge.svg)](https://github.com/lettyponce/GitScope/actions/workflows/android-ci.yml)
+![Kotlin](https://img.shields.io/badge/Kotlin-1.9.24-7F52FF?logo=kotlin&logoColor=white)
+![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-Material_3-4285F4?logo=jetpackcompose&logoColor=white)
+![Architecture](https://img.shields.io/badge/Architecture-MVVM-555555)
+![JDK](https://img.shields.io/badge/JDK-17-ED8B00)
+![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white)
 
 GitScope is a native Android application for exploring GitHub repositories by programming language, with sorting, repository details, and resilient network handling.
 
